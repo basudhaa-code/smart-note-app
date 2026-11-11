@@ -1,0 +1,48 @@
+# Environment variables and secrets
+.env
+.env.local
+.env.*
+!.env.example
+
+# Python bytecode and cache
+__pycache__/
+*.py[cod]
+*$py.class
+*.so
+.pytest_cache/
+.coverage
+htmlcov/
+
+# Virtual Environments
+.venv/
+venv/
+env/
+ENV/
+env.bak/
+venv.bak/
+
+# Uploaded user files & dynamic runtime data
+# (Exclude user-uploaded PDFs and generated JSON, but preserve sample files for testing)
+uploads/*
+!uploads/sample_lecture_deep_learning.pdf
+!uploads/.gitkeep
+data/*
+!data/sample-dl.json
+!data/.gitkeep
+
+# IDE and Editor configurations
+.vscode/
+.idea/
+*.sublime-project
+*.sublime-workspace
+*.swp
+*.swo
+
+# OS generated files
+.DS_Store
+.DS_Store?
+._*
+.Spotlight-V100
+.Trashes
+ehthumbs.db
+Thumbs.db

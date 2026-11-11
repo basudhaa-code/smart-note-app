@@ -1,0 +1,431 @@
+%PDF-1.4
+1 0 obj
+<< /Type /Catalog /Pages 2 0 R >>
+endobj
+2 0 obj
+<< /Type /Pages /Kids [6 0 R 8 0 R 10 0 R 12 0 R 14 0 R 16 0 R 18 0 R] /Count 7 >>
+endobj
+3 0 obj
+<< /Type /Font /Subtype /Type1 /BaseFont /Helvetica >>
+endobj
+4 0 obj
+<< /Type /Font /Subtype /Type1 /BaseFont /Helvetica-Bold >>
+endobj
+5 0 obj
+<< /Length 4477 >>
+stream
+0.12 0.24 0.42 rg
+BT /F2 8 Tf 50 812 Td (SMARTNOTE AI  |  PROJECT EVALUATION GUIDE) Tj ET
+0.75 0.80 0.87 RG 0.7 w 50 802 m 545 802 l S
+0.25 0.30 0.38 rg
+BT /F1 8 Tf 50 34 Td (Simple-language study guide) Tj ET
+BT /F1 8 Tf 500 34 Td (Page 1 of 7) Tj ET
+BT /F2 25 Tf 1 0 0 1 50 775 Tm (SmartNote AI) Tj ET
+BT /F1 12 Tf 1 0 0 1 50 739 Tm (Project explained in simple language | Evaluation and viva) Tj ET
+BT /F1 12 Tf 1 0 0 1 50 720 Tm (preparation guide) Tj ET
+BT /F1 12 Tf 1 0 0 1 50 699 Tm (Based on the project source code) Tj ET
+BT /F2 15 Tf 1 0 0 1 50 674 Tm (START HERE) Tj ET
+BT /F1 9.5 Tf 1 0 0 1 50 649 Tm (This guide explains what the application does, how its parts work together, what the code) Tj ET
+BT /F1 9.5 Tf 1 0 0 1 50 637 Tm (  files are responsible for, and how to answer common evaluation questions. Learn the flow) Tj ET
+BT /F1 9.5 Tf 1 0 0 1 50 625 Tm (  first, then use the viva section to practise explaining details.) Tj ET
+BT /F2 15 Tf 1 0 0 1 50 604 Tm (PROJECT OVERVIEW) Tj ET
+BT /F1 9.5 Tf 1 0 0 1 50 579 Tm (SmartNote AI is a web application that helps a student turn lecture PDFs into study material.) Tj ET
+BT /F1 9.5 Tf 1 0 0 1 50 567 Tm (  It extracts text from a PDF, presents the pages in a browser, and can prepare notes,) Tj ET
+BT /F1 9.5 Tf 1 0 0 1 50 555 Tm (  important topics, practice questions, and a chat assistant.) Tj ET
+BT /F1 9.5 Tf 1 0 0 1 50 538 Tm (The project uses a Python server for processing and a browser interface for interacting with) Tj ET
+BT /F1 9.5 Tf 1 0 0 1 50 526 Tm (  the result. Gemini is an optional cloud AI service for generating study content. Some) Tj ET
+BT /F1 9.5 Tf 1 0 0 1 50 514 Tm (  document-analysis features have local fallback logic when Gemini is unavailable.) Tj ET
+BT /F2 11 Tf 1 0 0 1 50 493 Tm (What problem does it solve?) Tj ET
+BT /F1 9.5 Tf 1 0 0 1 50 473 Tm (Students often have long lecture documents and limited time to organize them. SmartNote) Tj ET
+BT /F1 9.5 Tf 1 0 0 1 50 461 Tm (  automates first-draft summaries and revision materials, and gives the student a place to ask) Tj ET
+BT /F1 9.5 Tf 1 0 0 1 50 449 Tm (  questions.) Tj ET
+BT /F2 11 Tf 1 0 0 1 50 428 Tm (One-sentence summary) Tj ET
+BT /F1 9.5 Tf 1 0 0 1 50 408 Tm (SmartNote AI is a FastAPI-based study assistant that extracts lecture PDF text and turns it) Tj ET
+BT /F1 9.5 Tf 1 0 0 1 50 396 Tm (  into browser-based notes, topic maps, practice material, and Gemini chat.) Tj ET
+BT /F2 15 Tf 1 0 0 1 50 375 Tm (HOW THE WHOLE PROJECT WORKS) Tj ET
+BT /F1 9.5 Tf 1 0 0 1 50 350 Tm (Think of the system as four stages: upload, extract, generate, and display.) Tj ET
+BT /F1 9.5 Tf 1 0 0 1 50 333 Tm (- 1. Upload: the student selects a PDF in the web page. The browser sends it to the) Tj ET
+BT /F1 9.5 Tf 1 0 0 1 50 321 Tm (  FastAPI server.) Tj ET
+BT /F1 9.5 Tf 1 0 0 1 50 307 Tm (- 2. Extract: PyMuPDF reads each page and extracts text blocks. The processor records) Tj ET
+BT /F1 9.5 Tf 1 0 0 1 50 295 Tm (  page numbers, headings, word counts, and the total text.) Tj ET
+BT /F1 9.5 Tf 1 0 0 1 50 281 Tm (- 3. Generate: the AI service uses Gemini when available. Notes, topics, and practice) Tj ET
+BT /F1 9.5 Tf 1 0 0 1 50 269 Tm (  features have local heuristic fallbacks. Chat uses Gemini directly.) Tj ET
+BT /F1 9.5 Tf 1 0 0 1 50 255 Tm (- 4. Display: the API returns JSON. JavaScript updates the page with notes, topic cards,) Tj ET
+BT /F1 9.5 Tf 1 0 0 1 50 243 Tm (  a mindmap, practice activities, or the chat reply.) Tj ET
+BT /F2 11 Tf 1 0 0 1 50 225 Tm (Simple architecture) Tj ET
+BT /F1 8.5 Tf 1 0 0 1 50 205 Tm (Student browser -> static HTML/CSS/JavaScript -> FastAPI routes) Tj ET
+BT /F1 8.5 Tf 1 0 0 1 50 192 Tm (                                      |) Tj ET
+BT /F1 8.5 Tf 1 0 0 1 50 179 Tm (                         PDFProcessor -> extracted text/pages/chunks) Tj ET
+BT /F1 8.5 Tf 1 0 0 1 50 166 Tm (                                      |) Tj ET
+BT /F1 8.5 Tf 1 0 0 1 50 153 Tm (                       AIService -> Gemini or local fallbacks) Tj ET
+BT /F1 8.5 Tf 1 0 0 1 50 140 Tm (                                      |) Tj ET
+BT /F1 8.5 Tf 1 0 0 1 50 127 Tm (                          JSON response -> browser display) Tj ET
+BT /F1 9.5 Tf 1 0 0 1 50 114 Tm (The browser and server communicate using HTTP requests. Most requests and responses use JSON;) Tj ET
+BT /F1 9.5 Tf 1 0 0 1 50 102 Tm (  PDF upload uses a multipart file request.) Tj ET
+BT /F2 15 Tf 1 0 0 1 50 81 Tm (TECHNOLOGIES USED) Tj ET
+endstream
+endobj
+6 0 obj
+<< /Type /Page /Parent 2 0 R /MediaBox [0 0 595 842] /Resources << /Font << /F1 3 0 R /F2 4 0 R >> >> /Contents 5 0 R >>
+endobj
+7 0 obj
+<< /Length 4880 >>
+stream
+0.12 0.24 0.42 rg
+BT /F2 8 Tf 50 812 Td (SMARTNOTE AI  |  PROJECT EVALUATION GUIDE) Tj ET
+0.75 0.80 0.87 RG 0.7 w 50 802 m 545 802 l S
+0.25 0.30 0.38 rg
+BT /F1 8 Tf 50 34 Td (Simple-language study guide) Tj ET
+BT /F1 8 Tf 500 34 Td (Page 2 of 7) Tj ET
+BT /F1 9.5 Tf 1 0 0 1 50 775 Tm (- Python: main programming language for the server and document-processing logic.) Tj ET
+BT /F1 9.5 Tf 1 0 0 1 50 761 Tm (- FastAPI: defines the HTTP API endpoints and serves the web application.) Tj ET
+BT /F1 9.5 Tf 1 0 0 1 50 747 Tm (- PyMuPDF \(fitz\): opens PDFs and extracts text page by page.) Tj ET
+BT /F1 9.5 Tf 1 0 0 1 50 733 Tm (- Google GenAI SDK: sends prompts to the configured Gemini model.) Tj ET
+BT /F1 9.5 Tf 1 0 0 1 50 719 Tm (- scikit-learn and NumPy: used by the TF-IDF retrieval engine.) Tj ET
+BT /F1 9.5 Tf 1 0 0 1 50 705 Tm (- HTML: defines the page structure; CSS styles it; JavaScript handles user interaction) Tj ET
+BT /F1 9.5 Tf 1 0 0 1 50 693 Tm (  and API calls.) Tj ET
+BT /F1 9.5 Tf 1 0 0 1 50 679 Tm (- Pydantic: checks the shape of incoming API request data.) Tj ET
+BT /F1 9.5 Tf 1 0 0 1 50 665 Tm (- python-dotenv: reads local settings such as the API key from a .env file.) Tj ET
+BT /F2 11 Tf 1 0 0 1 50 647 Tm (Why separate the project into services?) Tj ET
+BT /F1 9.5 Tf 1 0 0 1 50 627 Tm (Each part has a clear job. main.py handles web requests, pdf_processor.py handles PDFs,) Tj ET
+BT /F1 9.5 Tf 1 0 0 1 50 615 Tm (  ai_service.py creates AI study content, and rag_engine.py handles text retrieval) Tj ET
+BT /F1 9.5 Tf 1 0 0 1 50 603 Tm (  experiments. This makes the code easier to understand and test than putting every task in) Tj ET
+BT /F1 9.5 Tf 1 0 0 1 50 591 Tm (  one file.) Tj ET
+BT /F2 15 Tf 1 0 0 1 50 570 Tm (PDF PROCESSING: FROM PAGES TO TEXT) Tj ET
+BT /F1 9.5 Tf 1 0 0 1 50 545 Tm (The PDFProcessor in services/pdf_processor.py opens a file, checks its pages, and extracts) Tj ET
+BT /F1 9.5 Tf 1 0 0 1 50 533 Tm (  text blocks. For each page it stores the page number, text, blocks, headings, and word and) Tj ET
+BT /F1 9.5 Tf 1 0 0 1 50 521 Tm (  character counts.) Tj ET
+BT /F1 9.5 Tf 1 0 0 1 50 504 Tm (The processor also creates a document title from PDF metadata or, if that is missing, from the) Tj ET
+BT /F1 9.5 Tf 1 0 0 1 50 492 Tm (  file name. It calculates an approximate reading time using about 200 words per minute.) Tj ET
+BT /F2 11 Tf 1 0 0 1 50 471 Tm (What is a chunk?) Tj ET
+BT /F1 9.5 Tf 1 0 0 1 50 451 Tm (A chunk is a smaller piece of extracted text. The processor groups paragraphs into pieces of) Tj ET
+BT /F1 9.5 Tf 1 0 0 1 50 439 Tm (  roughly 800 characters and overlaps the end of one piece with the beginning of the next.) Tj ET
+BT /F1 9.5 Tf 1 0 0 1 50 427 Tm (  Overlap helps avoid losing context when a concept crosses a chunk boundary. Each chunk has) Tj ET
+BT /F1 9.5 Tf 1 0 0 1 50 415 Tm (  an ID, page number, and text.) Tj ET
+BT /F1 9.5 Tf 1 0 0 1 50 398 Tm (If the PDF is a scan containing only pictures, ordinary text extraction may find little or no) Tj ET
+BT /F1 9.5 Tf 1 0 0 1 50 386 Tm (  text. This project does not perform optical character recognition \(OCR\), so scanned pages) Tj ET
+BT /F1 9.5 Tf 1 0 0 1 50 374 Tm (  may need OCR before useful notes can be generated.) Tj ET
+BT /F2 11 Tf 1 0 0 1 50 353 Tm (Why preserve page numbers?) Tj ET
+BT /F1 9.5 Tf 1 0 0 1 50 333 Tm (Page metadata helps show where extracted content came from and makes it easier to relate study) Tj ET
+BT /F1 9.5 Tf 1 0 0 1 50 321 Tm (  material back to the original lecture. In the current implementation, the direct Gemini chat) Tj ET
+BT /F1 9.5 Tf 1 0 0 1 50 309 Tm (  does not use these chunks or cite their page numbers.) Tj ET
+BT /F2 15 Tf 1 0 0 1 50 288 Tm (AI FEATURES AND FALLBACKS) Tj ET
+BT /F2 11 Tf 1 0 0 1 50 259 Tm (Structured notes) Tj ET
+BT /F1 9.5 Tf 1 0 0 1 50 239 Tm (AIService.generate_structured_notes sends the lecture text, title, and page information to) Tj ET
+BT /F1 9.5 Tf 1 0 0 1 50 227 Tm (  Gemini and asks for a study guide with summaries, concepts, definitions, exam traps, and a) Tj ET
+BT /F1 9.5 Tf 1 0 0 1 50 215 Tm (  revision sheet. The Gemini prompt limits the text sent to about 350,000 characters. If) Tj ET
+BT /F1 9.5 Tf 1 0 0 1 50 203 Tm (  Gemini is unavailable or fails, a local structural note generator is used.) Tj ET
+BT /F2 11 Tf 1 0 0 1 50 182 Tm (Important topics) Tj ET
+BT /F1 9.5 Tf 1 0 0 1 50 162 Tm (AIService.extract_important_topics asks Gemini to return topics, priority levels,) Tj ET
+BT /F1 9.5 Tf 1 0 0 1 50 150 Tm (  descriptions, page references, prerequisites, and mindmap data in JSON. It limits input to) Tj ET
+BT /F1 9.5 Tf 1 0 0 1 50 138 Tm (  about 300,000 characters. If the call or JSON parsing fails, a local heuristic topic) Tj ET
+BT /F1 9.5 Tf 1 0 0 1 50 126 Tm (  extractor is used.) Tj ET
+BT /F2 11 Tf 1 0 0 1 50 105 Tm (Practice questions) Tj ET
+endstream
+endobj
+8 0 obj
+<< /Type /Page /Parent 2 0 R /MediaBox [0 0 595 842] /Resources << /Font << /F1 3 0 R /F2 4 0 R >> >> /Contents 7 0 R >>
+endobj
+9 0 obj
+<< /Length 5504 >>
+stream
+0.12 0.24 0.42 rg
+BT /F2 8 Tf 50 812 Td (SMARTNOTE AI  |  PROJECT EVALUATION GUIDE) Tj ET
+0.75 0.80 0.87 RG 0.7 w 50 802 m 545 802 l S
+0.25 0.30 0.38 rg
+BT /F1 8 Tf 50 34 Td (Simple-language study guide) Tj ET
+BT /F1 8 Tf 500 34 Td (Page 3 of 7) Tj ET
+BT /F1 9.5 Tf 1 0 0 1 50 775 Tm (AIService.generate_practice_questions requests multiple-choice questions, flashcards, and) Tj ET
+BT /F1 9.5 Tf 1 0 0 1 50 763 Tm (  short-answer questions from Gemini, including answers and page references. The input is) Tj ET
+BT /F1 9.5 Tf 1 0 0 1 50 751 Tm (  limited to about 300,000 characters. If Gemini fails, local heuristic generation supplies) Tj ET
+BT /F1 9.5 Tf 1 0 0 1 50 739 Tm (  practice content.) Tj ET
+BT /F2 11 Tf 1 0 0 1 50 718 Tm (Chat question and answer) Tj ET
+BT /F1 9.5 Tf 1 0 0 1 50 698 Tm (AIService.answer_question sends the latest student question and up to eight recent chat) Tj ET
+BT /F1 9.5 Tf 1 0 0 1 50 686 Tm (  messages to Gemini. It is not limited to the uploaded PDF. It returns an answer and) Tj ET
+BT /F1 9.5 Tf 1 0 0 1 50 674 Tm (  suggested follow-up questions. It returns no PDF citations. If no Gemini key is configured,) Tj ET
+BT /F1 9.5 Tf 1 0 0 1 50 662 Tm (  or the Gemini request fails, the API reports an error instead of pretending an offline) Tj ET
+BT /F1 9.5 Tf 1 0 0 1 50 650 Tm (  answer came from Gemini.) Tj ET
+BT /F2 11 Tf 1 0 0 1 50 629 Tm (What does fallback mean here?) Tj ET
+BT /F1 9.5 Tf 1 0 0 1 50 609 Tm (A fallback is a simpler local method used when a cloud AI request cannot complete. It can keep) Tj ET
+BT /F1 9.5 Tf 1 0 0 1 50 597 Tm (  notes, topics, and practice features available, but its results may be less flexible than) Tj ET
+BT /F1 9.5 Tf 1 0 0 1 50 585 Tm (  Gemini. Chat currently has no local fallback.) Tj ET
+BT /F2 15 Tf 1 0 0 1 50 564 Tm (RAG: IMPORTANT EVALUATION DISTINCTION) Tj ET
+BT /F1 9.5 Tf 1 0 0 1 50 539 Tm (RAG means Retrieval-Augmented Generation. A typical RAG system first searches a document for) Tj ET
+BT /F1 9.5 Tf 1 0 0 1 50 527 Tm (  relevant passages, then gives those passages to a language model to help answer a question.) Tj ET
+BT /F1 9.5 Tf 1 0 0 1 50 510 Tm (This project contains a RAGEngine in services/rag_engine.py. It converts document chunks into) Tj ET
+BT /F1 9.5 Tf 1 0 0 1 50 498 Tm (  TF-IDF vectors and uses cosine similarity to rank chunks against a search query. TF-IDF) Tj ET
+BT /F1 9.5 Tf 1 0 0 1 50 486 Tm (  gives more weight to terms that are informative within the document; cosine similarity) Tj ET
+BT /F1 9.5 Tf 1 0 0 1 50 474 Tm (  compares the direction of the query vector with each chunk vector.) Tj ET
+BT /F1 9.5 Tf 1 0 0 1 50 457 Tm (However, the current production chat route does not call rag_engine.search or build a PDF) Tj ET
+BT /F1 9.5 Tf 1 0 0 1 50 445 Tm (  context prompt. It sends the chat question and conversation history directly to Gemini. PDF) Tj ET
+BT /F1 9.5 Tf 1 0 0 1 50 433 Tm (  extraction still creates chunks, but the active chat answer is general Gemini chat, not PDF-) Tj ET
+BT /F1 9.5 Tf 1 0 0 1 50 421 Tm (  grounded RAG.) Tj ET
+BT /F1 9.5 Tf 1 0 0 1 50 404 Tm (The system test separately indexes a sample document and checks that retrieval works. That) Tj ET
+BT /F1 9.5 Tf 1 0 0 1 50 392 Tm (  proves the retrieval component can be tested; it does not mean the live chat endpoint is) Tj ET
+BT /F1 9.5 Tf 1 0 0 1 50 380 Tm (  using retrieval.) Tj ET
+BT /F2 11 Tf 1 0 0 1 50 359 Tm (Short evaluation answer) Tj ET
+BT /F1 9.5 Tf 1 0 0 1 50 339 Tm (The project has a TF-IDF and cosine-similarity RAG component, but the current chat feature is) Tj ET
+BT /F1 9.5 Tf 1 0 0 1 50 327 Tm (  not RAG. It calls Gemini directly without retrieving PDF excerpts.) Tj ET
+BT /F2 15 Tf 1 0 0 1 50 306 Tm (MAIN SOURCE FILES) Tj ET
+BT /F1 9.5 Tf 1 0 0 1 50 281 Tm (- main.py: creates the FastAPI application, request models, routes, document storage,) Tj ET
+BT /F1 9.5 Tf 1 0 0 1 50 269 Tm (  startup cleanup, and static-file serving.) Tj ET
+BT /F1 9.5 Tf 1 0 0 1 50 255 Tm (- services/pdf_processor.py: extracts text and metadata from PDF pages and creates text) Tj ET
+BT /F1 9.5 Tf 1 0 0 1 50 243 Tm (  chunks.) Tj ET
+BT /F1 9.5 Tf 1 0 0 1 50 229 Tm (- services/ai_service.py: generates notes, topics, and practice using Gemini or local) Tj ET
+BT /F1 9.5 Tf 1 0 0 1 50 217 Tm (  fallbacks; handles direct Gemini chat.) Tj ET
+BT /F1 9.5 Tf 1 0 0 1 50 203 Tm (- services/rag_engine.py: indexes chunks with TF-IDF and retrieves similar chunks with) Tj ET
+BT /F1 9.5 Tf 1 0 0 1 50 191 Tm (  cosine similarity.) Tj ET
+BT /F1 9.5 Tf 1 0 0 1 50 177 Tm (- static/index.html: defines the user interface layout and feature tabs.) Tj ET
+BT /F1 9.5 Tf 1 0 0 1 50 163 Tm (- static/app.js: handles uploads, calls API routes, updates the interface, and stores) Tj ET
+BT /F1 9.5 Tf 1 0 0 1 50 151 Tm (  chat history in browser memory.) Tj ET
+BT /F1 9.5 Tf 1 0 0 1 50 137 Tm (- static/style.css: controls colors, layout, responsive styling, and animations.) Tj ET
+BT /F1 9.5 Tf 1 0 0 1 50 123 Tm (- config.py: loads the .env file, API key, model name, port, and local data folders.) Tj ET
+BT /F1 9.5 Tf 1 0 0 1 50 109 Tm (- test_system.py: runs component-level and end-to-end-style checks, including PDF) Tj ET
+BT /F1 9.5 Tf 1 0 0 1 50 97 Tm (  extraction, RAG retrieval, fallbacks, and mocked Gemini chat.) Tj ET
+BT /F1 9.5 Tf 1 0 0 1 50 83 Tm (- test_api.py: exercises HTTP routes through FastAPI TestClient and mocks Gemini for chat) Tj ET
+BT /F1 9.5 Tf 1 0 0 1 50 71 Tm (  tests.) Tj ET
+endstream
+endobj
+10 0 obj
+<< /Type /Page /Parent 2 0 R /MediaBox [0 0 595 842] /Resources << /Font << /F1 3 0 R /F2 4 0 R >> >> /Contents 9 0 R >>
+endobj
+11 0 obj
+<< /Length 5400 >>
+stream
+0.12 0.24 0.42 rg
+BT /F2 8 Tf 50 812 Td (SMARTNOTE AI  |  PROJECT EVALUATION GUIDE) Tj ET
+0.75 0.80 0.87 RG 0.7 w 50 802 m 545 802 l S
+0.25 0.30 0.38 rg
+BT /F1 8 Tf 50 34 Td (Simple-language study guide) Tj ET
+BT /F1 8 Tf 500 34 Td (Page 4 of 7) Tj ET
+BT /F1 9.5 Tf 1 0 0 1 50 775 Tm (- .env: local configuration for the key and model. It should stay private and must not be) Tj ET
+BT /F1 9.5 Tf 1 0 0 1 50 763 Tm (  committed or shared.) Tj ET
+BT /F2 15 Tf 1 0 0 1 50 745 Tm (IMPORTANT API ROUTES) Tj ET
+BT /F1 9.5 Tf 1 0 0 1 50 720 Tm (- GET /api/status: reports whether a Gemini key is configured and which model is) Tj ET
+BT /F1 9.5 Tf 1 0 0 1 50 708 Tm (  selected.) Tj ET
+BT /F1 9.5 Tf 1 0 0 1 50 694 Tm (- POST /api/config/key: accepts a key through the settings interface and can save it into) Tj ET
+BT /F1 9.5 Tf 1 0 0 1 50 682 Tm (  .env.) Tj ET
+BT /F1 9.5 Tf 1 0 0 1 50 668 Tm (- POST /api/upload: accepts a PDF, extracts its text, and stores document data.) Tj ET
+BT /F1 9.5 Tf 1 0 0 1 50 654 Tm (- GET /api/document/{doc_id}: returns the document overview and generated materials.) Tj ET
+BT /F1 9.5 Tf 1 0 0 1 50 640 Tm (- POST /api/generate-notes/{doc_id}: creates structured notes.) Tj ET
+BT /F1 9.5 Tf 1 0 0 1 50 626 Tm (- POST /api/generate-topics/{doc_id}: creates prioritized topics and mindmap data.) Tj ET
+BT /F1 9.5 Tf 1 0 0 1 50 612 Tm (- POST /api/generate-practice/{doc_id}: creates quizzes, flashcards, and short-answer) Tj ET
+BT /F1 9.5 Tf 1 0 0 1 50 600 Tm (  questions.) Tj ET
+BT /F1 9.5 Tf 1 0 0 1 50 586 Tm (- POST /api/generate-all/{doc_id}: runs notes, topics, and practice generation) Tj ET
+BT /F1 9.5 Tf 1 0 0 1 50 574 Tm (  sequentially.) Tj ET
+BT /F1 9.5 Tf 1 0 0 1 50 560 Tm (- POST /api/chat: sends a question and chat history to Gemini; it does not require a) Tj ET
+BT /F1 9.5 Tf 1 0 0 1 50 548 Tm (  document ID.) Tj ET
+BT /F1 9.5 Tf 1 0 0 1 50 534 Tm (- GET /api/export/{doc_id}/markdown and /html: export generated notes as Markdown or) Tj ET
+BT /F1 9.5 Tf 1 0 0 1 50 522 Tm (  printable HTML.) Tj ET
+BT /F1 9.5 Tf 1 0 0 1 50 508 Tm (The {doc_id} part is a placeholder for the ID returned after uploading a document. The API) Tj ET
+BT /F1 9.5 Tf 1 0 0 1 50 496 Tm (  returns status codes: for example, 200 means success, 404 means a requested resource was not) Tj ET
+BT /F1 9.5 Tf 1 0 0 1 50 484 Tm (  found, 503 means chat is not configured, and 502 means the Gemini request failed.) Tj ET
+BT /F2 15 Tf 1 0 0 1 50 463 Tm (CONFIGURATION, STORAGE, AND LIFECYCLE) Tj ET
+BT /F1 9.5 Tf 1 0 0 1 50 438 Tm (config.py loads the local .env file and reads GEMINI_API_KEY, DEFAULT_MODEL, and PORT. The) Tj ET
+BT /F1 9.5 Tf 1 0 0 1 50 426 Tm (  .env file is ignored by Git in this project, which helps keep secrets out of source control.) Tj ET
+BT /F1 9.5 Tf 1 0 0 1 50 414 Tm (  Never paste an API key into screenshots, chats, or a public repository. If a key has been) Tj ET
+BT /F1 9.5 Tf 1 0 0 1 50 402 Tm (  exposed, revoke it and create a replacement.) Tj ET
+BT /F1 9.5 Tf 1 0 0 1 50 385 Tm (Uploaded PDFs are written to uploads/ and parsed document data is written to data/ as JSON.) Tj ET
+BT /F1 9.5 Tf 1 0 0 1 50 373 Tm (  The app also keeps active documents in a Python dictionary in memory.) Tj ET
+BT /F1 9.5 Tf 1 0 0 1 50 356 Tm (Important lifecycle behavior: on server startup, main.py clears saved PDFs and JSON files.) Tj ET
+BT /F1 9.5 Tf 1 0 0 1 50 344 Tm (  Therefore documents are not restored across a server restart. This is a current) Tj ET
+BT /F1 9.5 Tf 1 0 0 1 50 332 Tm (  implementation detail, not durable long-term storage.) Tj ET
+BT /F1 9.5 Tf 1 0 0 1 50 315 Tm (The browser keeps chat history in JavaScript memory and sends a small recent slice with each) Tj ET
+BT /F1 9.5 Tf 1 0 0 1 50 303 Tm (  new question. Refreshing the page clears that chat history.) Tj ET
+BT /F2 15 Tf 1 0 0 1 50 282 Tm (TESTING AND QUALITY CHECKS) Tj ET
+BT /F1 9.5 Tf 1 0 0 1 50 257 Tm (Run the system test with the project Python environment: python test_system.py. It creates a) Tj ET
+BT /F1 9.5 Tf 1 0 0 1 50 245 Tm (  sample PDF, extracts text, checks chunk retrieval, exercises note/topic/practice generation,) Tj ET
+BT /F1 9.5 Tf 1 0 0 1 50 233 Tm (  and mocks Gemini for the direct chat check.) Tj ET
+BT /F1 9.5 Tf 1 0 0 1 50 216 Tm (The chat test uses a mock response, so it checks prompt construction and API wiring without) Tj ET
+BT /F1 9.5 Tf 1 0 0 1 50 204 Tm (  making a real Gemini request. A successful mocked test does not prove that the configured) Tj ET
+BT /F1 9.5 Tf 1 0 0 1 50 192 Tm (  key or model is accepted by Google.) Tj ET
+BT /F1 9.5 Tf 1 0 0 1 50 175 Tm (For a live integration check, confirm /api/status reports Gemini configured, verify the exact) Tj ET
+BT /F1 9.5 Tf 1 0 0 1 50 163 Tm (  model is available to the key, then send one short chat question. Avoid sending the actual) Tj ET
+BT /F1 9.5 Tf 1 0 0 1 50 151 Tm (  key in logs or evaluation material.) Tj ET
+BT /F2 11 Tf 1 0 0 1 50 130 Tm (What should tests cover?) Tj ET
+BT /F1 9.5 Tf 1 0 0 1 50 110 Tm (- PDF extraction: correct page count, text, and chunk page labels.) Tj ET
+BT /F1 9.5 Tf 1 0 0 1 50 96 Tm (- Fallbacks: notes, topics, and practice return useful shapes with no API key.) Tj ET
+BT /F1 9.5 Tf 1 0 0 1 50 82 Tm (- Chat: sends user history, handles empty Gemini replies, and returns a clear error if) Tj ET
+BT /F1 9.5 Tf 1 0 0 1 50 70 Tm (  Gemini fails.) Tj ET
+endstream
+endobj
+12 0 obj
+<< /Type /Page /Parent 2 0 R /MediaBox [0 0 595 842] /Resources << /Font << /F1 3 0 R /F2 4 0 R >> >> /Contents 11 0 R >>
+endobj
+13 0 obj
+<< /Length 4752 >>
+stream
+0.12 0.24 0.42 rg
+BT /F2 8 Tf 50 812 Td (SMARTNOTE AI  |  PROJECT EVALUATION GUIDE) Tj ET
+0.75 0.80 0.87 RG 0.7 w 50 802 m 545 802 l S
+0.25 0.30 0.38 rg
+BT /F1 8 Tf 50 34 Td (Simple-language study guide) Tj ET
+BT /F1 8 Tf 500 34 Td (Page 5 of 7) Tj ET
+BT /F1 9.5 Tf 1 0 0 1 50 775 Tm (- Routes: missing document, invalid file, successful upload, generation, and export) Tj ET
+BT /F1 9.5 Tf 1 0 0 1 50 763 Tm (  behavior.) Tj ET
+BT /F2 15 Tf 1 0 0 1 50 745 Tm (STRENGTHS AND LIMITATIONS) Tj ET
+BT /F2 11 Tf 1 0 0 1 50 716 Tm (Strengths) Tj ET
+BT /F1 9.5 Tf 1 0 0 1 50 696 Tm (- The code is divided into manageable parts and has an automated test script.) Tj ET
+BT /F1 9.5 Tf 1 0 0 1 50 682 Tm (- Page-level extraction and chunk metadata make the source PDF easier to inspect.) Tj ET
+BT /F1 9.5 Tf 1 0 0 1 50 668 Tm (- Local generation fallbacks let several study features run without a working Gemini) Tj ET
+BT /F1 9.5 Tf 1 0 0 1 50 656 Tm (  call.) Tj ET
+BT /F1 9.5 Tf 1 0 0 1 50 642 Tm (- The UI brings notes, topics, quizzes, flashcards, exports, and chat together.) Tj ET
+BT /F2 11 Tf 1 0 0 1 50 624 Tm (Limitations to discuss honestly) Tj ET
+BT /F1 9.5 Tf 1 0 0 1 50 604 Tm (- The active chat is not grounded in the uploaded PDF and does not cite its pages.) Tj ET
+BT /F1 9.5 Tf 1 0 0 1 50 590 Tm (- Scanned PDFs need OCR, which is not implemented in the current processor.) Tj ET
+BT /F1 9.5 Tf 1 0 0 1 50 576 Tm (- Document files are cleared at server startup, and browser chat history is not) Tj ET
+BT /F1 9.5 Tf 1 0 0 1 50 564 Tm (  persistent.) Tj ET
+BT /F1 9.5 Tf 1 0 0 1 50 550 Tm (- Cloud AI requires an available model, a valid key, network access, and available quota.) Tj ET
+BT /F1 9.5 Tf 1 0 0 1 50 538 Tm (  A configured key alone does not guarantee successful requests.) Tj ET
+BT /F1 9.5 Tf 1 0 0 1 50 524 Tm (- The one-click generate-all endpoint runs the generations one after another, which can) Tj ET
+BT /F1 9.5 Tf 1 0 0 1 50 512 Tm (  take time.) Tj ET
+BT /F1 9.5 Tf 1 0 0 1 50 498 Tm (- Generated content may be incomplete or incorrect and should be checked against the) Tj ET
+BT /F1 9.5 Tf 1 0 0 1 50 486 Tm (  lecture.) Tj ET
+BT /F2 15 Tf 1 0 0 1 50 468 Tm (EVALUATION / VIVA QUESTIONS AND ANSWERS) Tj ET
+BT /F2 9.5 Tf 1 0 0 1 50 443 Tm (1. What is the main purpose of SmartNote AI?) Tj ET
+BT /F1 9.5 Tf 1 0 0 1 50 426 Tm (It extracts lecture text from PDFs and helps students create notes, topic lists, practice) Tj ET
+BT /F1 9.5 Tf 1 0 0 1 50 414 Tm (  questions, and AI chat answers.) Tj ET
+BT /F2 9.5 Tf 1 0 0 1 50 400 Tm (2. What is FastAPI doing in this project?) Tj ET
+BT /F1 9.5 Tf 1 0 0 1 50 383 Tm (It runs the backend web server, defines HTTP endpoints, validates request data, and returns) Tj ET
+BT /F1 9.5 Tf 1 0 0 1 50 371 Tm (  results to the browser.) Tj ET
+BT /F2 9.5 Tf 1 0 0 1 50 357 Tm (3. How does the project read a PDF?) Tj ET
+BT /F1 9.5 Tf 1 0 0 1 50 340 Tm (PDFProcessor uses PyMuPDF to extract text blocks from each page, preserve page details, and) Tj ET
+BT /F1 9.5 Tf 1 0 0 1 50 328 Tm (  create smaller text chunks.) Tj ET
+BT /F2 9.5 Tf 1 0 0 1 50 314 Tm (4. What is the difference between the frontend and backend?) Tj ET
+BT /F1 9.5 Tf 1 0 0 1 50 297 Tm (The frontend is the browser interface made from HTML, CSS, and JavaScript. The backend is the) Tj ET
+BT /F1 9.5 Tf 1 0 0 1 50 285 Tm (  Python server that processes files and calls AI services.) Tj ET
+BT /F2 9.5 Tf 1 0 0 1 50 271 Tm (5. What is a REST API endpoint?) Tj ET
+BT /F1 9.5 Tf 1 0 0 1 50 254 Tm (It is a URL and HTTP method that lets the frontend request a specific operation, such as POST) Tj ET
+BT /F1 9.5 Tf 1 0 0 1 50 242 Tm (  /api/upload to upload a PDF.) Tj ET
+BT /F2 9.5 Tf 1 0 0 1 50 228 Tm (6. What is Gemini used for?) Tj ET
+BT /F1 9.5 Tf 1 0 0 1 50 211 Tm (Gemini can create study notes, topics, and practice content from extracted text and answer) Tj ET
+BT /F1 9.5 Tf 1 0 0 1 50 199 Tm (  general chat questions.) Tj ET
+BT /F2 9.5 Tf 1 0 0 1 50 185 Tm (7. Does the current chat use RAG?) Tj ET
+BT /F1 9.5 Tf 1 0 0 1 50 168 Tm (No. The project has a TF-IDF retrieval engine, but the live chat route sends the question and) Tj ET
+BT /F1 9.5 Tf 1 0 0 1 50 156 Tm (  recent history directly to Gemini without PDF retrieval.) Tj ET
+BT /F2 9.5 Tf 1 0 0 1 50 142 Tm (8. Explain TF-IDF and cosine similarity simply.) Tj ET
+BT /F1 9.5 Tf 1 0 0 1 50 125 Tm (TF-IDF gives words a numerical importance based on how often they occur in a passage and how) Tj ET
+BT /F1 9.5 Tf 1 0 0 1 50 113 Tm (  uncommon they are in the document. Cosine similarity compares the query vector with passage) Tj ET
+BT /F1 9.5 Tf 1 0 0 1 50 101 Tm (  vectors to rank similar passages.) Tj ET
+BT /F2 9.5 Tf 1 0 0 1 50 87 Tm (9. What is a fallback?) Tj ET
+endstream
+endobj
+14 0 obj
+<< /Type /Page /Parent 2 0 R /MediaBox [0 0 595 842] /Resources << /Font << /F1 3 0 R /F2 4 0 R >> >> /Contents 13 0 R >>
+endobj
+15 0 obj
+<< /Length 5369 >>
+stream
+0.12 0.24 0.42 rg
+BT /F2 8 Tf 50 812 Td (SMARTNOTE AI  |  PROJECT EVALUATION GUIDE) Tj ET
+0.75 0.80 0.87 RG 0.7 w 50 802 m 545 802 l S
+0.25 0.30 0.38 rg
+BT /F1 8 Tf 50 34 Td (Simple-language study guide) Tj ET
+BT /F1 8 Tf 500 34 Td (Page 6 of 7) Tj ET
+BT /F1 9.5 Tf 1 0 0 1 50 775 Tm (A fallback is a simpler local method used if a cloud AI service is unavailable. This project) Tj ET
+BT /F1 9.5 Tf 1 0 0 1 50 763 Tm (  has local fallbacks for notes, topics, and practice, but not for chat.) Tj ET
+BT /F2 9.5 Tf 1 0 0 1 50 749 Tm (10. What is the purpose of chunk overlap?) Tj ET
+BT /F1 9.5 Tf 1 0 0 1 50 732 Tm (It repeats a small part of text between neighboring chunks so a sentence or idea near a) Tj ET
+BT /F1 9.5 Tf 1 0 0 1 50 720 Tm (  boundary is less likely to lose context.) Tj ET
+BT /F2 9.5 Tf 1 0 0 1 50 706 Tm (11. Where is the API key stored?) Tj ET
+BT /F1 9.5 Tf 1 0 0 1 50 689 Tm (In a local .env file or through API settings. The file is ignored by Git and the key should) Tj ET
+BT /F1 9.5 Tf 1 0 0 1 50 677 Tm (  never be committed or shared.) Tj ET
+BT /F2 9.5 Tf 1 0 0 1 50 663 Tm (12. Why might chat return an error even if a key exists?) Tj ET
+BT /F1 9.5 Tf 1 0 0 1 50 646 Tm (The model might not be available to the account, the key may be invalid, the network may fail,) Tj ET
+BT /F1 9.5 Tf 1 0 0 1 50 634 Tm (  or free-tier quota/rate limits may be reached.) Tj ET
+BT /F2 9.5 Tf 1 0 0 1 50 620 Tm (13. What happens after a server restart?) Tj ET
+BT /F1 9.5 Tf 1 0 0 1 50 603 Tm (The startup handler deletes saved uploaded PDFs and document JSON. The app currently does not) Tj ET
+BT /F1 9.5 Tf 1 0 0 1 50 591 Tm (  preserve uploaded documents across restarts.) Tj ET
+BT /F2 9.5 Tf 1 0 0 1 50 577 Tm (14. How is chat history sent?) Tj ET
+BT /F1 9.5 Tf 1 0 0 1 50 560 Tm (The browser stores recent messages in memory and sends a limited number with the next) Tj ET
+BT /F1 9.5 Tf 1 0 0 1 50 548 Tm (  question. The server adds them to the Gemini prompt.) Tj ET
+BT /F2 9.5 Tf 1 0 0 1 50 534 Tm (15. What is one improvement you would make?) Tj ET
+BT /F1 9.5 Tf 1 0 0 1 50 517 Tm (I would add an optional document-grounded chat mode that retrieves relevant chunks, includes) Tj ET
+BT /F1 9.5 Tf 1 0 0 1 50 505 Tm (  them in the Gemini prompt, and cites their pages. I would also add OCR for scanned PDFs and) Tj ET
+BT /F1 9.5 Tf 1 0 0 1 50 493 Tm (  persistent storage.) Tj ET
+BT /F2 15 Tf 1 0 0 1 50 475 Tm (SHORT PRESENTATION SCRIPT) Tj ET
+BT /F1 9.5 Tf 1 0 0 1 50 450 Tm (Good morning. My project is SmartNote AI, a study assistant for lecture PDFs. The user uploads) Tj ET
+BT /F1 9.5 Tf 1 0 0 1 50 438 Tm (  a PDF through the web interface. The FastAPI backend receives it, and PyMuPDF extracts text) Tj ET
+BT /F1 9.5 Tf 1 0 0 1 50 426 Tm (  page by page. The processor also records page information and creates text chunks.) Tj ET
+BT /F1 9.5 Tf 1 0 0 1 50 409 Tm (The AI service uses Gemini to generate structured notes, important topics, and practice) Tj ET
+BT /F1 9.5 Tf 1 0 0 1 50 397 Tm (  questions. If those Gemini operations fail, the application has local heuristic fallbacks.) Tj ET
+BT /F1 9.5 Tf 1 0 0 1 50 385 Tm (  The chat feature is different: it sends the question and recent conversation directly to) Tj ET
+BT /F1 9.5 Tf 1 0 0 1 50 373 Tm (  Gemini, so it can answer general questions but is not currently grounded in the uploaded) Tj ET
+BT /F1 9.5 Tf 1 0 0 1 50 361 Tm (  PDF.) Tj ET
+BT /F1 9.5 Tf 1 0 0 1 50 344 Tm (The frontend is built with HTML, CSS, and JavaScript. It calls backend routes and displays the) Tj ET
+BT /F1 9.5 Tf 1 0 0 1 50 332 Tm (  returned material. The project also has a TF-IDF and cosine-similarity retrieval component,) Tj ET
+BT /F1 9.5 Tf 1 0 0 1 50 320 Tm (  automated tests, and Markdown or printable HTML exports. Important limitations are that) Tj ET
+BT /F1 9.5 Tf 1 0 0 1 50 308 Tm (  scanned PDFs need OCR, documents are cleared on server startup, and live AI features depend) Tj ET
+BT /F1 9.5 Tf 1 0 0 1 50 296 Tm (  on model access and quota.) Tj ET
+BT /F1 9.5 Tf 1 0 0 1 50 279 Tm (That is the complete flow: upload, extract, generate, and display.) Tj ET
+BT /F2 15 Tf 1 0 0 1 50 258 Tm (GLOSSARY) Tj ET
+BT /F1 9.5 Tf 1 0 0 1 50 233 Tm (- API: a defined way for two software parts to communicate.) Tj ET
+BT /F1 9.5 Tf 1 0 0 1 50 219 Tm (- Backend: the server-side code that handles data and application logic.) Tj ET
+BT /F1 9.5 Tf 1 0 0 1 50 205 Tm (- Frontend: the part of the application the user sees and interacts with.) Tj ET
+BT /F1 9.5 Tf 1 0 0 1 50 191 Tm (- Endpoint: a specific API URL for one operation.) Tj ET
+BT /F1 9.5 Tf 1 0 0 1 50 177 Tm (- JSON: a text format for structured data exchanged between the browser and server.) Tj ET
+BT /F1 9.5 Tf 1 0 0 1 50 163 Tm (- Chunk: a smaller piece of a longer document.) Tj ET
+BT /F1 9.5 Tf 1 0 0 1 50 149 Tm (- Embedding/vector: a list of numbers representing text for comparison.) Tj ET
+BT /F1 9.5 Tf 1 0 0 1 50 135 Tm (- TF-IDF: a method that scores words by their importance in a document.) Tj ET
+BT /F1 9.5 Tf 1 0 0 1 50 121 Tm (- Cosine similarity: a way to compare how similar two vectors are.) Tj ET
+BT /F1 9.5 Tf 1 0 0 1 50 107 Tm (- RAG: retrieval first, then generation using the retrieved information.) Tj ET
+BT /F1 9.5 Tf 1 0 0 1 50 93 Tm (- Heuristic: a practical rule-based approximation, not a full language model.) Tj ET
+endstream
+endobj
+16 0 obj
+<< /Type /Page /Parent 2 0 R /MediaBox [0 0 595 842] /Resources << /Font << /F1 3 0 R /F2 4 0 R >> >> /Contents 15 0 R >>
+endobj
+17 0 obj
+<< /Length 1659 >>
+stream
+0.12 0.24 0.42 rg
+BT /F2 8 Tf 50 812 Td (SMARTNOTE AI  |  PROJECT EVALUATION GUIDE) Tj ET
+0.75 0.80 0.87 RG 0.7 w 50 802 m 545 802 l S
+0.25 0.30 0.38 rg
+BT /F1 8 Tf 50 34 Td (Simple-language study guide) Tj ET
+BT /F1 8 Tf 500 34 Td (Page 7 of 7) Tj ET
+BT /F1 9.5 Tf 1 0 0 1 50 775 Tm (- OCR: optical character recognition; converts text in images/scans into machine-readable) Tj ET
+BT /F1 9.5 Tf 1 0 0 1 50 763 Tm (  text.) Tj ET
+BT /F1 9.5 Tf 1 0 0 1 50 749 Tm (- Environment variable: a setting stored outside the main source code, such as a secret) Tj ET
+BT /F1 9.5 Tf 1 0 0 1 50 737 Tm (  key.) Tj ET
+BT /F1 9.5 Tf 1 0 0 1 50 723 Tm (- Quota/rate limit: a restriction on how many AI requests can be made in a period.) Tj ET
+BT /F2 15 Tf 1 0 0 1 50 705 Tm (LAST-MINUTE REVISION) Tj ET
+BT /F1 9.5 Tf 1 0 0 1 50 680 Tm (- Remember the flow: browser -> FastAPI -> PDFProcessor -> AIService -> response ->) Tj ET
+BT /F1 9.5 Tf 1 0 0 1 50 668 Tm (  browser.) Tj ET
+BT /F1 9.5 Tf 1 0 0 1 50 654 Tm (- Remember the file roles: main.py routes; pdf_processor.py extracts; ai_service.py) Tj ET
+BT /F1 9.5 Tf 1 0 0 1 50 642 Tm (  generates; rag_engine.py retrieves; app.js connects the UI to the API.) Tj ET
+BT /F1 9.5 Tf 1 0 0 1 50 628 Tm (- Say clearly: current chat is direct Gemini, not PDF-grounded RAG.) Tj ET
+BT /F1 9.5 Tf 1 0 0 1 50 614 Tm (- Do not claim live Gemini was verified just because mocked tests pass.) Tj ET
+BT /F1 9.5 Tf 1 0 0 1 50 600 Tm (- Know key limitations: no OCR, no persistence across restart, chat requires Gemini.) Tj ET
+BT /F1 9.5 Tf 1 0 0 1 50 586 Tm (- Never reveal or commit the API key. Revoke a key if it has been exposed.) Tj ET
+endstream
+endobj
+18 0 obj
+<< /Type /Page /Parent 2 0 R /MediaBox [0 0 595 842] /Resources << /Font << /F1 3 0 R /F2 4 0 R >> >> /Contents 17 0 R >>
+endobj
+xref
+0 19
+0000000000 65535 f 
+0000000009 00000 n 
+0000000058 00000 n 
+0000000156 00000 n 
+0000000226 00000 n 
+0000000301 00000 n 
+0000004830 00000 n 
+0000004966 00000 n 
+0000009898 00000 n 
+0000010034 00000 n 
+0000015590 00000 n 
+0000015727 00000 n 
+0000021180 00000 n 
+0000021318 00000 n 
+0000026123 00000 n 
+0000026261 00000 n 
+0000031683 00000 n 
+0000031821 00000 n 
+0000033533 00000 n 
+trailer
+<< /Size 19 /Root 1 0 R >>
+startxref
+33671
+%%EOF

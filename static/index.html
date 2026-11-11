@@ -1,0 +1,774 @@
+<!DOCTYPE html>
+<html lang="en" class="dark">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>SmartNote AI - Intelligent Lecture Assistant & Study Engine</title>
+  
+  <!-- Tailwind CSS -->
+  <script src="https://cdn.tailwindcss.com"></script>
+  <script>
+    tailwind.config = {
+      darkMode: 'class',
+      theme: {
+        extend: {
+          colors: {
+            brand: {
+              50: '#eef2ff',
+              100: '#e0e7ff',
+              200: '#c7d2fe',
+              400: '#818cf8',
+              500: '#6366f1',
+              600: '#4f46e5',
+              700: '#4338ca',
+              800: '#3730a3',
+              900: '#312e81',
+            }
+          }
+        }
+      }
+    }
+  </script>
+
+  <!-- Lucide Icons -->
+  <script src="https://unpkg.com/lucide@latest"></script>
+
+  <!-- Marked.js for Markdown -->
+  <script src="https://cdn.jsdelivr.net/npm/marked/marked.min.js"></script>
+
+  <!-- KaTeX for Math Equations -->
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/katex@0.16.8/dist/katex.min.css">
+  <script src="https://cdn.jsdelivr.net/npm/katex@0.16.8/dist/katex.min.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/katex@0.16.8/dist/contrib/auto-render.min.js"></script>
+
+  <!-- Canvas Confetti -->
+  <script src="https://cdn.jsdelivr.net/npm/canvas-confetti@1.6.0/dist/confetti.browser.min.js"></script>
+
+  <!-- Custom CSS -->
+  <link rel="stylesheet" href="/static/style.css">
+</head>
+<body class="bg-[#0b0f19] text-slate-100 min-h-screen flex flex-col antialiased selection:bg-brand-500 selection:text-white">
+
+  <!-- TOP NAVBAR -->
+  <header class="sticky top-0 z-40 border-b border-slate-800/80 bg-[#0b0f19]/90 backdrop-blur-md">
+    <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 h-16 flex items-center justify-between">
+      
+      <!-- Logo & Title -->
+      <div class="flex items-center space-x-3">
+        <div class="w-10 h-10 rounded-xl bg-gradient-to-tr from-brand-600 via-indigo-500 to-purple-500 flex items-center justify-center shadow-lg shadow-indigo-500/25 ring-1 ring-white/20">
+          <i data-lucide="brain-circuit" class="w-6 h-6 text-white"></i>
+        </div>
+        <div>
+          <span class="text-xl font-bold bg-gradient-to-r from-white via-indigo-200 to-brand-400 bg-clip-text text-transparent">
+            SmartNote AI
+          </span>
+          <span class="hidden sm:inline-block ml-2 px-2 py-0.5 text-[10px] font-semibold uppercase tracking-wider bg-brand-500/10 text-brand-400 rounded-full border border-brand-500/20">
+            Lecture Study Suite
+          </span>
+        </div>
+      </div>
+
+      <!-- Center: Active Document Switcher Dropdown -->
+      <div class="relative">
+        <button onclick="toggleDocDropdown()" id="activeDocBadge" class="hidden md:flex items-center space-x-2 px-3 py-1.5 rounded-lg bg-slate-900/90 border border-slate-700/80 text-xs text-slate-200 hover:border-brand-500/60 transition cursor-pointer">
+          <i data-lucide="file-text" class="w-4 h-4 text-brand-400"></i>
+          <span class="font-medium truncate max-w-xs" id="activeDocTitle">No PDF loaded</span>
+          <span id="activeDocPages" class="text-slate-400 font-mono text-[11px]"></span>
+          <i data-lucide="chevron-down" class="w-3.5 h-3.5 text-slate-400 ml-1"></i>
+        </button>
+
+        <!-- Dropdown menu -->
+        <div id="docDropdownMenu" class="hidden absolute left-0 mt-2 w-72 rounded-xl bg-slate-900 border border-slate-700 shadow-2xl z-50 py-2 max-h-80 overflow-y-auto">
+          <div class="px-3 py-1.5 text-[10px] font-bold uppercase tracking-wider text-slate-400 border-b border-slate-800">
+            Switch Lecture PDF
+          </div>
+          <div id="docDropdownList" class="py-1">
+            <!-- Dynamic document items -->
+          </div>
+        </div>
+      </div>
+
+      <!-- Right Controls: Status & API Key -->
+      <div class="flex items-center space-x-3">
+        <!-- API Status Indicator -->
+        <button onclick="openApiKeyModal()" id="apiStatusPill" class="flex items-center space-x-2 px-3 py-1.5 rounded-full text-xs font-medium bg-emerald-500/10 text-emerald-400 border border-emerald-500/20 hover:bg-emerald-500/20 transition">
+          <span class="w-2 h-2 rounded-full bg-emerald-400 animate-pulse"></span>
+          <span id="apiStatusText">Checking AI...</span>
+        </button>
+
+        <!-- API Key Settings Button -->
+        <button onclick="openApiKeyModal()" class="p-2 rounded-lg bg-slate-800/80 hover:bg-slate-700 text-slate-300 hover:text-white transition border border-slate-700/60" title="API Settings">
+          <i data-lucide="settings" class="w-4 h-4"></i>
+        </button>
+      </div>
+
+    </div>
+  </header>
+
+  <!-- NAVIGATION TABS -->
+  <nav class="border-b border-slate-800/60 bg-slate-950/40">
+    <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+      <div class="flex space-x-1 sm:space-x-4 overflow-x-auto py-2.5 text-sm font-medium scrollbar-none">
+        
+        <button onclick="switchTab('tab-upload')" id="nav-tab-upload" class="tab-btn flex items-center space-x-2 px-3 py-2 rounded-lg text-slate-400 hover:text-white hover:bg-slate-800/60 transition active-tab">
+          <i data-lucide="folder-up" class="w-4 h-4"></i>
+          <span>1. Upload & Overview</span>
+        </button>
+
+        <button onclick="switchTab('tab-notes')" id="nav-tab-notes" class="tab-btn flex items-center space-x-2 px-3 py-2 rounded-lg text-slate-400 hover:text-white hover:bg-slate-800/60 transition">
+          <i data-lucide="book-open-check" class="w-4 h-4"></i>
+          <span>2. Structured Notes</span>
+        </button>
+
+        <button onclick="switchTab('tab-topics')" id="nav-tab-topics" class="tab-btn flex items-center space-x-2 px-3 py-2 rounded-lg text-slate-400 hover:text-white hover:bg-slate-800/60 transition">
+          <i data-lucide="network" class="w-4 h-4"></i>
+          <span>3. Important Topics</span>
+        </button>
+
+        <button onclick="switchTab('tab-practice')" id="nav-tab-practice" class="tab-btn flex items-center space-x-2 px-3 py-2 rounded-lg text-slate-400 hover:text-white hover:bg-slate-800/60 transition">
+          <i data-lucide="sparkles" class="w-4 h-4"></i>
+          <span>4. Practice Hub</span>
+          <span id="quizBadge" class="hidden px-1.5 py-0.2 bg-brand-500/20 text-brand-300 text-[10px] rounded-md font-bold">Quiz</span>
+        </button>
+
+        <button onclick="switchTab('tab-chat')" id="nav-tab-chat" class="tab-btn flex items-center space-x-2 px-3 py-2 rounded-lg text-slate-400 hover:text-white hover:bg-slate-800/60 transition">
+          <i data-lucide="message-square-code" class="w-4 h-4"></i>
+          <span>5. Ask AI (Q&A)</span>
+        </button>
+
+      </div>
+    </div>
+  </nav>
+
+  <!-- MAIN VIEWPORT -->
+  <main class="flex-1 max-w-7xl w-full mx-auto px-4 sm:px-6 lg:px-8 py-6">
+
+    <!-- ================================================================= -->
+    <!-- TAB 1: UPLOAD & OVERVIEW -->
+    <!-- ================================================================= -->
+    <section id="tab-upload" class="tab-content block space-y-6">
+      
+      <!-- Hero / Dropzone area -->
+      <div class="grid grid-cols-1 gap-6">
+        
+        <!-- Upload Card -->
+        <div class="glass-panel rounded-2xl p-6 border border-slate-800 relative overflow-hidden">
+          <div class="absolute -right-16 -top-16 w-56 h-56 bg-brand-500/10 rounded-full blur-3xl pointer-events-none"></div>
+          
+          <h2 class="text-lg font-bold text-white mb-1 flex items-center space-x-2">
+            <i data-lucide="upload-cloud" class="w-5 h-5 text-brand-400"></i>
+            <span>Upload Lecture Material (PDF)</span>
+          </h2>
+          <p class="text-sm text-slate-400 mb-5">
+            Upload slides, textbooks, lecture handouts, or syllabus files. The AI engine will parse the material page-by-page.
+          </p>
+
+          <!-- Drop Area -->
+          <div id="dropZone" class="border-2 border-dashed border-slate-700 hover:border-brand-500/70 rounded-xl p-8 text-center cursor-pointer bg-slate-900/40 hover:bg-slate-900/80 transition duration-200 group">
+            <input type="file" id="pdfFileInput" accept=".pdf" class="hidden">
+            <div class="w-16 h-16 rounded-2xl bg-brand-500/10 text-brand-400 mx-auto flex items-center justify-center mb-4 group-hover:scale-110 group-hover:bg-brand-500/20 transition">
+              <i data-lucide="file-up" class="w-8 h-8"></i>
+            </div>
+            <p class="font-semibold text-slate-200 mb-1">
+              Click to select or drag & drop lecture PDF here
+            </p>
+            <p class="text-xs text-slate-500">Supports multi-page lecture notes, slides, papers (Max 50MB)</p>
+          </div>
+
+        </div>
+
+      </div>
+
+      <!-- Document Overview (Visible when document loaded) -->
+      <div id="docOverviewSection" class="hidden space-y-6">
+        
+        <!-- Document Stats Banner -->
+        <div class="glass-panel rounded-2xl p-6 border border-slate-800">
+          <div class="flex flex-col md:flex-row md:items-center justify-between gap-4 pb-6 border-b border-slate-800/80">
+            <div>
+              <span class="text-xs font-semibold uppercase tracking-wider text-brand-400">Loaded Document</span>
+              <h2 id="docDetailTitle" class="text-xl sm:text-2xl font-extrabold text-white mt-0.5"></h2>
+              <p id="docDetailFilename" class="text-xs text-slate-400 mt-1"></p>
+            </div>
+
+            <!-- Primary Generate All Action -->
+            <button onclick="generateAll()" id="btnGenerateAll" class="px-5 py-3 rounded-xl bg-gradient-to-r from-brand-600 to-indigo-600 hover:from-brand-500 hover:to-indigo-500 text-white font-semibold text-sm transition shadow-lg shadow-brand-500/25 flex items-center justify-center space-x-2">
+              <i data-lucide="sparkles" class="w-5 h-5"></i>
+              <span>Generate All (Notes + Topics + Practice)</span>
+            </button>
+          </div>
+
+          <!-- Stats Grid -->
+          <div class="grid grid-cols-2 sm:grid-cols-4 gap-4 mt-6">
+            <div class="bg-slate-900/60 rounded-xl p-4 border border-slate-800">
+              <span class="text-xs text-slate-400">Total Pages</span>
+              <p id="statTotalPages" class="text-2xl font-bold text-white mt-1">-</p>
+            </div>
+            <div class="bg-slate-900/60 rounded-xl p-4 border border-slate-800">
+              <span class="text-xs text-slate-400">Word Count</span>
+              <p id="statTotalWords" class="text-2xl font-bold text-brand-400 mt-1">-</p>
+            </div>
+            <div class="bg-slate-900/60 rounded-xl p-4 border border-slate-800">
+              <span class="text-xs text-slate-400">Est. Reading Time</span>
+              <p id="statReadingTime" class="text-2xl font-bold text-indigo-400 mt-1">-</p>
+            </div>
+            <div class="bg-slate-900/60 rounded-xl p-4 border border-slate-800">
+              <span class="text-xs text-slate-400">RAG Semantic Chunks</span>
+              <p id="statChunksCount" class="text-2xl font-bold text-emerald-400 mt-1">-</p>
+            </div>
+          </div>
+        </div>
+
+        <!-- Quick Launch Cards -->
+        <div class="grid grid-cols-1 sm:grid-cols-3 gap-4">
+          <div onclick="switchTab('tab-notes')" class="glass-panel glass-panel-hover rounded-xl p-5 border border-slate-800 cursor-pointer">
+            <div class="w-10 h-10 rounded-lg bg-indigo-500/10 text-indigo-400 flex items-center justify-center mb-3">
+              <i data-lucide="file-text" class="w-5 h-5"></i>
+            </div>
+            <h4 class="font-bold text-white text-base">Structured Notes</h4>
+            <p class="text-xs text-slate-400 mt-1">Hierarchical summary, module breakdown, definitions glossary, and formulas.</p>
+            <div class="mt-3 text-xs font-semibold text-brand-400 flex items-center space-x-1">
+              <span>View Notes</span>
+              <i data-lucide="chevron-right" class="w-3.5 h-3.5"></i>
+            </div>
+          </div>
+
+          <div onclick="switchTab('tab-topics')" class="glass-panel glass-panel-hover rounded-xl p-5 border border-slate-800 cursor-pointer">
+            <div class="w-10 h-10 rounded-lg bg-purple-500/10 text-purple-400 flex items-center justify-center mb-3">
+              <i data-lucide="target" class="w-5 h-5"></i>
+            </div>
+            <h4 class="font-bold text-white text-base">Important Topics</h4>
+            <p class="text-xs text-slate-400 mt-1">Ranked high-yield topics, importance levels, prerequisites, and mindmap graph.</p>
+            <div class="mt-3 text-xs font-semibold text-purple-400 flex items-center space-x-1">
+              <span>Explore Topics</span>
+              <i data-lucide="chevron-right" class="w-3.5 h-3.5"></i>
+            </div>
+          </div>
+
+          <div onclick="switchTab('tab-practice')" class="glass-panel glass-panel-hover rounded-xl p-5 border border-slate-800 cursor-pointer">
+            <div class="w-10 h-10 rounded-lg bg-emerald-500/10 text-emerald-400 flex items-center justify-center mb-3">
+              <i data-lucide="help-circle" class="w-5 h-5"></i>
+            </div>
+            <h4 class="font-bold text-white text-base">Practice Hub & Quiz</h4>
+            <p class="text-xs text-slate-400 mt-1">Interactive multiple choice quiz with scoring, 3D flip flashcards, and conceptual Q&A.</p>
+            <div class="mt-3 text-xs font-semibold text-emerald-400 flex items-center space-x-1">
+              <span>Start Practice</span>
+              <i data-lucide="chevron-right" class="w-3.5 h-3.5"></i>
+            </div>
+          </div>
+        </div>
+
+        <!-- Page Text Viewer Accordion -->
+        <div class="glass-panel rounded-2xl p-6 border border-slate-800">
+          <div class="flex items-center justify-between mb-4">
+            <h3 class="text-sm font-bold uppercase tracking-wider text-slate-300 flex items-center space-x-2">
+              <i data-lucide="layers" class="w-4 h-4 text-brand-400"></i>
+              <span>Page-by-Page Extracted Content</span>
+            </h3>
+            <span class="text-xs text-slate-500">Verified PyMuPDF Text Extraction</span>
+          </div>
+          <div id="pagesListContainer" class="space-y-3">
+            <!-- Dynamic Page Accordions -->
+          </div>
+        </div>
+
+      </div>
+
+    </section>
+
+    <!-- ================================================================= -->
+    <!-- TAB 2: STRUCTURED NOTES -->
+    <!-- ================================================================= -->
+    <section id="tab-notes" class="tab-content hidden space-y-6">
+      
+      <!-- Top Action Bar -->
+      <div class="flex flex-wrap items-center justify-between gap-4 glass-panel p-4 rounded-xl border border-slate-800">
+        <div>
+          <h2 class="text-lg font-bold text-white flex items-center space-x-2">
+            <i data-lucide="book-open" class="w-5 h-5 text-brand-400"></i>
+            <span>Structured Lecture Study Guide</span>
+          </h2>
+          <p id="notesMetaBadge" class="text-xs text-slate-400 mt-0.5">Comprehensive, exam-oriented study notes.</p>
+        </div>
+
+        <div class="flex flex-wrap items-center gap-2">
+          <button onclick="copyNotesMarkdown()" class="px-3 py-1.5 rounded-lg bg-slate-800 hover:bg-slate-700 text-xs font-medium text-slate-300 hover:text-white transition flex items-center space-x-1.5 border border-slate-700">
+            <i data-lucide="copy" class="w-3.5 h-3.5"></i>
+            <span>Copy Markdown</span>
+          </button>
+          <button onclick="downloadNotesMarkdown()" class="px-3 py-1.5 rounded-lg bg-slate-800 hover:bg-slate-700 text-xs font-medium text-slate-300 hover:text-white transition flex items-center space-x-1.5 border border-slate-700">
+            <i data-lucide="download" class="w-3.5 h-3.5"></i>
+            <span>Export .MD</span>
+          </button>
+          <button onclick="openPrintableHtml()" class="px-3 py-1.5 rounded-lg bg-slate-800 hover:bg-slate-700 text-xs font-medium text-slate-300 hover:text-white transition flex items-center space-x-1.5 border border-slate-700">
+            <i data-lucide="printer" class="w-3.5 h-3.5"></i>
+            <span>Print / Save PDF</span>
+          </button>
+          <button onclick="generateNotes()" id="btnRegenNotes" class="px-3.5 py-1.5 rounded-lg bg-brand-600 hover:bg-brand-500 text-xs font-semibold text-white transition flex items-center space-x-1.5 shadow-sm shadow-brand-500/20">
+            <i data-lucide="refresh-cw" class="w-3.5 h-3.5"></i>
+            <span>Regenerate Notes</span>
+          </button>
+        </div>
+      </div>
+
+      <!-- Note Completeness & Coverage Banner -->
+      <div id="notesCoverageBanner" class="p-3.5 rounded-xl border border-emerald-500/30 bg-emerald-950/20 flex flex-wrap items-center justify-between gap-3 text-xs">
+        <div class="flex items-center space-x-2.5">
+          <span class="w-2.5 h-2.5 rounded-full bg-emerald-400 animate-pulse"></span>
+          <span class="font-bold text-emerald-300" id="notesCoverageText">100% Comprehensive Coverage</span>
+          <span class="text-slate-600">|</span>
+          <span class="text-slate-300" id="notesEngineBadge">Built-in Structural Knowledge Engine</span>
+        </div>
+        <div id="notesApiKeyPrompt" class="text-slate-400 flex items-center space-x-1.5">
+          <span>Want deep generative AI synthesis?</span>
+          <button onclick="openApiKeyModal()" class="text-brand-400 hover:text-brand-300 font-semibold underline">Connect Gemini API Key</button>
+        </div>
+      </div>
+
+      <!-- Notes Content Container -->
+      <div id="notesContainer" class="glass-panel p-8 rounded-2xl border border-slate-800 min-h-[500px]">
+        <!-- Empty / Loader state -->
+        <div id="notesEmptyState" class="text-center py-20">
+          <div class="w-16 h-16 rounded-2xl bg-brand-500/10 text-brand-400 mx-auto flex items-center justify-center mb-4">
+            <i data-lucide="file-edit" class="w-8 h-8"></i>
+          </div>
+          <h3 class="text-base font-bold text-white mb-2">No Notes Generated Yet</h3>
+          <p class="text-sm text-slate-400 max-w-md mx-auto mb-6">
+            Click the button below to synthesize structured lecture notes, definitions, module breakdowns, and exam tips.
+          </p>
+          <button onclick="generateNotes()" class="px-5 py-2.5 rounded-xl bg-brand-600 hover:bg-brand-500 text-white font-semibold text-sm transition shadow-lg shadow-brand-500/25 flex items-center space-x-2 mx-auto">
+            <i data-lucide="sparkles" class="w-4 h-4"></i>
+            <span>Generate Notes Now</span>
+          </button>
+        </div>
+
+        <!-- Rendered Notes Markdown Container -->
+        <div id="renderedNotesBody" class="markdown-body hidden"></div>
+      </div>
+
+    </section>
+
+    <!-- ================================================================= -->
+    <!-- TAB 3: IMPORTANT TOPICS & MINDMAP -->
+    <!-- ================================================================= -->
+    <section id="tab-topics" class="tab-content hidden space-y-6">
+      
+      <!-- Top Action Bar -->
+      <div class="flex flex-wrap items-center justify-between gap-4 glass-panel p-4 rounded-xl border border-slate-800">
+        <div>
+          <h2 class="text-lg font-bold text-white flex items-center space-x-2">
+            <i data-lucide="target" class="w-5 h-5 text-purple-400"></i>
+            <span>Identified Important Topics & Concept Map</span>
+          </h2>
+          <p id="topicsMetaBadge" class="text-xs text-slate-400 mt-0.5">High-yield concepts, exam priority ranking, and semantic relations.</p>
+        </div>
+
+        <div class="flex items-center space-x-3">
+          <!-- View switcher: Cards vs Mindmap -->
+          <div class="flex items-center p-1 bg-slate-900 rounded-lg border border-slate-800 text-xs">
+            <button onclick="switchTopicsView('cards')" id="btnViewCards" class="px-3 py-1 rounded-md bg-brand-600 text-white font-medium transition">
+              Topic Cards
+            </button>
+            <button onclick="switchTopicsView('mindmap')" id="btnViewMindmap" class="px-3 py-1 rounded-md text-slate-400 hover:text-white transition">
+              Concept Mindmap
+            </button>
+          </div>
+
+          <button onclick="generateTopics()" id="btnRegenTopics" class="px-3.5 py-1.5 rounded-lg bg-brand-600 hover:bg-brand-500 text-xs font-semibold text-white transition flex items-center space-x-1.5 shadow-sm shadow-brand-500/20">
+            <i data-lucide="refresh-cw" class="w-3.5 h-3.5"></i>
+            <span>Re-Analyze Topics</span>
+          </button>
+        </div>
+      </div>
+
+      <!-- Topics Content Container -->
+      <div id="topicsContainer">
+        <!-- Empty State -->
+        <div id="topicsEmptyState" class="glass-panel p-16 rounded-2xl border border-slate-800 text-center">
+          <div class="w-16 h-16 rounded-2xl bg-purple-500/10 text-purple-400 mx-auto flex items-center justify-center mb-4">
+            <i data-lucide="network" class="w-8 h-8"></i>
+          </div>
+          <h3 class="text-base font-bold text-white mb-2">No Topics Identified Yet</h3>
+          <p class="text-sm text-slate-400 max-w-md mx-auto mb-6">
+            Identify the core topics, ranked by exam importance, with prerequisite maps and page citations.
+          </p>
+          <button onclick="generateTopics()" class="px-5 py-2.5 rounded-xl bg-purple-600 hover:bg-purple-500 text-white font-semibold text-sm transition shadow-lg shadow-purple-500/25 flex items-center space-x-2 mx-auto">
+            <i data-lucide="sparkles" class="w-4 h-4"></i>
+            <span>Identify Topics</span>
+          </button>
+        </div>
+
+        <!-- Topic Cards View -->
+        <div id="topicsCardsView" class="hidden space-y-4">
+          <!-- Filter pills -->
+          <div class="flex items-center space-x-2 text-xs font-medium">
+            <span class="text-slate-400">Filter by Importance:</span>
+            <button onclick="filterTopics('all')" class="topic-filter-btn px-2.5 py-1 rounded-md bg-brand-600 text-white" data-filter="all">All</button>
+            <button onclick="filterTopics('High')" class="topic-filter-btn px-2.5 py-1 rounded-md bg-slate-800 text-rose-400 hover:bg-slate-700" data-filter="High">High Priority</button>
+            <button onclick="filterTopics('Medium')" class="topic-filter-btn px-2.5 py-1 rounded-md bg-slate-800 text-amber-400 hover:bg-slate-700" data-filter="Medium">Medium</button>
+            <button onclick="filterTopics('Foundational')" class="topic-filter-btn px-2.5 py-1 rounded-md bg-slate-800 text-sky-400 hover:bg-slate-700" data-filter="Foundational">Foundational</button>
+          </div>
+
+          <!-- Cards Grid -->
+          <div id="topicsGrid" class="grid grid-cols-1 md:grid-cols-2 gap-4">
+            <!-- Dynamic Topic Cards -->
+          </div>
+        </div>
+
+        <!-- Mindmap View -->
+        <div id="topicsMindmapView" class="hidden glass-panel p-8 rounded-2xl border border-slate-800">
+          <div class="text-center mb-8">
+            <span class="text-xs font-bold uppercase tracking-wider text-purple-400">Relational Concept Hierarchy</span>
+            <h3 id="mindmapRootTitle" class="text-xl font-extrabold text-white mt-1"></h3>
+          </div>
+          <div id="mindmapTreeContainer" class="max-w-3xl mx-auto space-y-6">
+            <!-- Dynamic Branches & Subtopics -->
+          </div>
+        </div>
+      </div>
+
+    </section>
+
+    <!-- ================================================================= -->
+    <!-- TAB 4: PRACTICE HUB (QUIZ, FLASHCARDS, SHORT ANSWER) -->
+    <!-- ================================================================= -->
+    <section id="tab-practice" class="tab-content hidden space-y-6">
+      
+      <!-- Top Action Bar & Practice Sub-navigation -->
+      <div class="flex flex-wrap items-center justify-between gap-4 glass-panel p-4 rounded-xl border border-slate-800">
+        <div>
+          <h2 class="text-lg font-bold text-white flex items-center space-x-2">
+            <i data-lucide="sparkles" class="w-5 h-5 text-emerald-400"></i>
+            <span>Interactive Practice Hub</span>
+          </h2>
+          <p id="practiceMetaBadge" class="text-xs text-slate-400 mt-0.5">Test knowledge retention with multiple choice quizzes, flashcards, and conceptual checks.</p>
+        </div>
+
+        <div class="flex flex-wrap items-center gap-3">
+          <!-- Practice mode toggle -->
+          <div class="flex items-center p-1 bg-slate-900 rounded-lg border border-slate-800 text-xs">
+            <button onclick="switchPracticeMode('quiz')" id="btnModeQuiz" class="px-3 py-1 rounded-md bg-emerald-600 text-white font-medium transition flex items-center space-x-1.5">
+              <i data-lucide="help-circle" class="w-3.5 h-3.5"></i>
+              <span>Interactive Quiz</span>
+            </button>
+            <button onclick="switchPracticeMode('flashcards')" id="btnModeFlashcards" class="px-3 py-1 rounded-md text-slate-400 hover:text-white transition flex items-center space-x-1.5">
+              <i data-lucide="layers" class="w-3.5 h-3.5"></i>
+              <span>3D Flashcards</span>
+            </button>
+            <button onclick="switchPracticeMode('short_answer')" id="btnModeShortAnswer" class="px-3 py-1 rounded-md text-slate-400 hover:text-white transition flex items-center space-x-1.5">
+              <i data-lucide="file-check" class="w-3.5 h-3.5"></i>
+              <span>Conceptual Q&A</span>
+            </button>
+          </div>
+
+          <button onclick="generatePractice()" id="btnRegenPractice" class="px-3.5 py-1.5 rounded-lg bg-emerald-600 hover:bg-emerald-500 text-xs font-semibold text-white transition flex items-center space-x-1.5 shadow-sm shadow-emerald-500/20">
+            <i data-lucide="refresh-cw" class="w-3.5 h-3.5"></i>
+            <span>Regenerate Questions</span>
+          </button>
+        </div>
+      </div>
+
+      <!-- Practice Content Container -->
+      <div id="practiceContainer">
+        <!-- Empty State -->
+        <div id="practiceEmptyState" class="glass-panel p-16 rounded-2xl border border-slate-800 text-center">
+          <div class="w-16 h-16 rounded-2xl bg-emerald-500/10 text-emerald-400 mx-auto flex items-center justify-center mb-4">
+            <i data-lucide="graduation-cap" class="w-8 h-8"></i>
+          </div>
+          <h3 class="text-base font-bold text-white mb-2">No Practice Questions Ready</h3>
+          <p class="text-sm text-slate-400 max-w-md mx-auto mb-6">
+            Generate multiple choice questions with explanations, 3D flip study flashcards, and conceptual review exercises.
+          </p>
+          <button onclick="generatePractice()" class="px-5 py-2.5 rounded-xl bg-emerald-600 hover:bg-emerald-500 text-white font-semibold text-sm transition shadow-lg shadow-emerald-500/25 flex items-center space-x-2 mx-auto">
+            <i data-lucide="sparkles" class="w-4 h-4"></i>
+            <span>Generate Practice Pack</span>
+          </button>
+        </div>
+
+        <!-- 1. QUIZ MODE -->
+        <div id="practiceQuizMode" class="hidden space-y-6">
+          <!-- Quiz Score Banner -->
+          <div class="glass-panel p-4 rounded-xl border border-slate-800 flex items-center justify-between">
+            <div class="flex items-center space-x-4">
+              <div class="w-10 h-10 rounded-lg bg-emerald-500/20 text-emerald-400 flex items-center justify-center font-bold text-base" id="quizScoreIcon">
+                🎯
+              </div>
+              <div>
+                <span class="text-xs text-slate-400">Current Quiz Progress</span>
+                <p class="text-sm font-bold text-white" id="quizScoreLabel">Answer questions below to test your mastery</p>
+              </div>
+            </div>
+            <button onclick="resetQuiz()" class="px-3 py-1.5 rounded-lg bg-slate-800 hover:bg-slate-700 text-xs font-medium text-slate-300 hover:text-white transition flex items-center space-x-1.5 border border-slate-700">
+              <i data-lucide="rotate-ccw" class="w-3.5 h-3.5"></i>
+              <span>Reset Quiz</span>
+            </button>
+          </div>
+
+          <!-- Quiz Questions List -->
+          <div id="quizListContainer" class="space-y-4">
+            <!-- Dynamic MCQ Cards -->
+          </div>
+        </div>
+
+        <!-- 2. FLASHCARDS MODE -->
+        <div id="practiceFlashcardsMode" class="hidden space-y-6">
+          <div class="max-w-2xl mx-auto">
+            
+            <!-- Flashcard Controls Top Bar -->
+            <div class="flex items-center justify-between text-xs text-slate-400 mb-3 px-2">
+              <div class="flex items-center space-x-2">
+                <span id="flashcardCounter">Card 1 of 1</span>
+                <span id="flashcardCategoryBadge" class="px-2 py-0.5 rounded bg-brand-500/10 text-brand-300 font-medium">Topic</span>
+              </div>
+              <div class="flex items-center space-x-3">
+                <button onclick="shuffleFlashcards()" class="hover:text-white transition flex items-center space-x-1">
+                  <i data-lucide="shuffle" class="w-3.5 h-3.5"></i>
+                  <span>Shuffle</span>
+                </button>
+                <span class="text-slate-600">|</span>
+                <span class="text-[11px] text-slate-500">Hint: Spacebar flips, arrows navigate</span>
+              </div>
+            </div>
+
+            <!-- The 3D Flip Flashcard -->
+            <div class="perspective-1000 w-full h-80 sm:h-96 cursor-pointer" onclick="flipFlashcard()">
+              <div id="flashcardInner" class="transform-style-3d transition-transform-600 relative w-full h-full rounded-2xl">
+                
+                <!-- Front Side -->
+                <div class="backface-hidden absolute inset-0 glass-panel rounded-2xl p-8 border border-slate-700/80 flex flex-col justify-between shadow-2xl bg-gradient-to-br from-slate-900/90 to-slate-950/90">
+                  <div class="flex items-center justify-between text-xs text-slate-400">
+                    <span class="font-bold uppercase tracking-wider text-brand-400 flex items-center space-x-1.5">
+                      <i data-lucide="help-circle" class="w-4 h-4"></i>
+                      <span>Concept Question / Prompt</span>
+                    </span>
+                    <span id="flashcardFrontPage" class="px-2 py-0.5 rounded bg-slate-800 text-slate-300 text-[11px]">Page 1</span>
+                  </div>
+
+                  <div class="my-auto text-center px-4">
+                    <p id="flashcardFrontText" class="text-lg sm:text-2xl font-bold text-white leading-relaxed"></p>
+                  </div>
+
+                  <div class="text-center text-xs text-slate-500 flex items-center justify-center space-x-1">
+                    <i data-lucide="touchpad" class="w-3.5 h-3.5"></i>
+                    <span>Click anywhere or press Space to reveal answer</span>
+                  </div>
+                </div>
+
+                <!-- Back Side -->
+                <div class="backface-hidden rotate-y-180 absolute inset-0 glass-panel rounded-2xl p-8 border border-brand-500/40 flex flex-col justify-between shadow-2xl bg-gradient-to-br from-slate-900/95 via-indigo-950/40 to-slate-950/95">
+                  <div class="flex items-center justify-between text-xs text-brand-300">
+                    <span class="font-bold uppercase tracking-wider flex items-center space-x-1.5">
+                      <i data-lucide="check-circle" class="w-4 h-4 text-emerald-400"></i>
+                      <span>Explanation & Answer</span>
+                    </span>
+                    <span id="flashcardBackPage" class="px-2 py-0.5 rounded bg-brand-900/60 text-brand-200 text-[11px]">Page 1</span>
+                  </div>
+
+                  <div class="my-auto px-4 overflow-y-auto max-h-56">
+                    <p id="flashcardBackText" class="text-base sm:text-lg text-slate-200 leading-relaxed"></p>
+                  </div>
+
+                  <div class="text-center text-xs text-slate-500 flex items-center justify-center space-x-1">
+                    <i data-lucide="refresh-cw" class="w-3.5 h-3.5"></i>
+                    <span>Click to flip back</span>
+                  </div>
+                </div>
+
+              </div>
+            </div>
+
+            <!-- Navigation Controls -->
+            <div class="flex items-center justify-between mt-6">
+              <button onclick="prevFlashcard()" class="px-4 py-2 rounded-xl bg-slate-800 hover:bg-slate-700 text-white text-sm font-semibold transition flex items-center space-x-2 border border-slate-700">
+                <i data-lucide="arrow-left" class="w-4 h-4"></i>
+                <span>Previous</span>
+              </button>
+
+              <button onclick="toggleMasteredFlashcard()" id="btnMastered" class="px-4 py-2 rounded-xl bg-slate-800/80 hover:bg-emerald-600/30 text-xs font-semibold text-slate-300 hover:text-emerald-400 transition flex items-center space-x-1.5 border border-slate-700">
+                <i data-lucide="check" class="w-4 h-4"></i>
+                <span id="btnMasteredLabel">Mark as Mastered</span>
+              </button>
+
+              <button onclick="nextFlashcard()" class="px-4 py-2 rounded-xl bg-brand-600 hover:bg-brand-500 text-white text-sm font-semibold transition flex items-center space-x-2 shadow-sm shadow-brand-500/25">
+                <span>Next</span>
+                <i data-lucide="arrow-right" class="w-4 h-4"></i>
+              </button>
+            </div>
+
+          </div>
+        </div>
+
+        <!-- 3. SHORT ANSWER / CONCEPTUAL MODE -->
+        <div id="practiceShortAnswerMode" class="hidden space-y-4">
+          <div id="shortAnswerListContainer" class="space-y-4">
+            <!-- Dynamic Short Answer Cards -->
+          </div>
+        </div>
+
+      </div>
+
+    </section>
+
+    <!-- ================================================================= -->
+    <!-- TAB 5: AI STUDY CHAT (Q&A) -->
+    <!-- ================================================================= -->
+    <section id="tab-chat" class="tab-content hidden h-[calc(100vh-12rem)] flex flex-col glass-panel rounded-2xl border border-slate-800 overflow-hidden">
+      
+      <!-- Chat Header -->
+      <div class="px-6 py-4 border-b border-slate-800 bg-slate-900/60 flex items-center justify-between">
+        <div class="flex items-center space-x-3">
+          <div class="w-9 h-9 rounded-xl bg-brand-500/20 text-brand-400 flex items-center justify-center">
+            <i data-lucide="bot" class="w-5 h-5"></i>
+          </div>
+          <div>
+            <h3 class="text-sm font-bold text-white flex items-center space-x-1.5">
+              <span>Interactive Tutor</span>
+              <span class="w-1.5 h-1.5 rounded-full bg-emerald-400"></span>
+            </h3>
+            <p class="text-xs text-slate-400">Ask AI-Tutor directly about any topic;</p>
+          </div>
+        </div>
+
+        <button onclick="clearChat()" class="px-3 py-1.5 rounded-lg bg-slate-800 hover:bg-slate-700 text-xs text-slate-300 hover:text-white transition flex items-center space-x-1 border border-slate-700">
+          <i data-lucide="trash-2" class="w-3.5 h-3.5"></i>
+          <span>Clear Chat</span>
+        </button>
+      </div>
+
+      <!-- Messages Stream -->
+      <div id="chatMessages" class="flex-1 overflow-y-auto p-6 space-y-4">
+        <!-- Welcome Message -->
+        <div class="flex items-start space-x-3 max-w-2xl">
+          <div class="w-8 h-8 rounded-lg bg-brand-600/30 text-brand-300 flex items-center justify-center shrink-0 mt-0.5">
+            <i data-lucide="sparkles" class="w-4 h-4"></i>
+          </div>
+          <div class="bg-slate-900/80 rounded-2xl rounded-tl-sm p-4 border border-slate-800 text-sm text-slate-200">
+            <p class="font-medium text-white mb-1">Hello! I am your AI Academic Tutor.</p>
+            <p class="text-slate-300">
+              Ask me anything! I can explain concepts, solve problems, and answer questions whether or not a lecture PDF is uploaded.
+            </p>
+          </div>
+        </div>
+      </div>
+
+      <!-- Suggested Quick Questions Row -->
+      <div id="suggestedQuestionsRow" class="px-6 py-2.5 bg-slate-950/40 border-t border-slate-800/60 flex items-center space-x-2 overflow-x-auto text-xs scrollbar-none">
+        <span class="text-slate-500 shrink-0 flex items-center space-x-1">
+          <i data-lucide="lightbulb" class="w-3.5 h-3.5 text-amber-400"></i>
+          <span>Suggested:</span>
+        </span>
+        <div id="suggestedChipsContainer" class="flex items-center space-x-2">
+          <!-- Dynamic suggestion chips -->
+        </div>
+      </div>
+
+      <!-- Chat Input Box -->
+      <div class="p-4 bg-slate-900/80 border-t border-slate-800">
+        <form onsubmit="handleChatSubmit(event)" class="flex items-center space-x-2">
+          <input 
+            type="text" 
+            id="chatInput" 
+            placeholder="Ask Gemini anything (e.g. 'Explain backpropagation' or 'Help me solve this problem')..." 
+            class="flex-1 bg-slate-950 border border-slate-700/80 rounded-xl px-4 py-3 text-sm text-white placeholder-slate-500 focus:outline-none focus:ring-2 focus:ring-brand-500 transition"
+          >
+          <button 
+            type="submit" 
+            id="chatSendBtn"
+            class="px-5 py-3 rounded-xl bg-brand-600 hover:bg-brand-500 text-white font-semibold text-sm transition flex items-center space-x-1.5 shadow-md shadow-brand-500/20 disabled:opacity-50"
+          >
+            <i data-lucide="send" class="w-4 h-4"></i>
+            <span class="hidden sm:inline">Ask</span>
+          </button>
+        </form>
+      </div>
+
+    </section>
+
+  </main>
+
+  <!-- ================================================================= -->
+  <!-- MODAL: GEMINI API KEY SETTINGS -->
+  <!-- ================================================================= -->
+  <div id="apiKeyModal" class="fixed inset-0 z-50 hidden bg-black/70 backdrop-blur-sm flex items-center justify-center p-4">
+    <div class="glass-panel w-full max-w-md rounded-2xl p-6 border border-slate-700 shadow-2xl relative">
+      
+      <div class="flex items-center justify-between pb-4 border-b border-slate-800">
+        <h3 class="text-base font-bold text-white flex items-center space-x-2">
+          <i data-lucide="key" class="w-5 h-5 text-brand-400"></i>
+          <span>Gemini AI Configuration</span>
+        </h3>
+        <button onclick="closeApiKeyModal()" class="text-slate-400 hover:text-white transition">
+          <i data-lucide="x" class="w-5 h-5"></i>
+        </button>
+      </div>
+
+      <div class="py-4 space-y-4">
+        <p class="text-xs text-slate-300">
+          SmartNote AI uses <strong>Google Gemini 2.5 Flash</strong> to produce deep academic notes, generate exam questions, and answer questions.
+        </p>
+
+        <div>
+          <label class="block text-xs font-semibold text-slate-300 mb-1.5">
+            Gemini API Key
+          </label>
+          <input 
+            type="password" 
+            id="inputApiKey" 
+            placeholder="AIzaSy..." 
+            class="w-full bg-slate-950 border border-slate-700 rounded-xl px-3.5 py-2.5 text-sm text-white placeholder-slate-600 focus:outline-none focus:ring-2 focus:ring-brand-500"
+          >
+          <p class="text-[11px] text-slate-500 mt-1">
+            Need an API key? You can get a free key from 
+            <a href="https://aistudio.google.com/app/apikey" target="_blank" class="text-brand-400 underline hover:text-brand-300">Google AI Studio</a>.
+          </p>
+        </div>
+
+        <div id="apiKeyStatusAlert" class="hidden text-xs p-3 rounded-lg border"></div>
+      </div>
+
+      <div class="pt-4 border-t border-slate-800 flex items-center justify-end space-x-2">
+        <button onclick="closeApiKeyModal()" class="px-4 py-2 rounded-xl text-xs font-semibold text-slate-400 hover:text-white transition">
+          Cancel
+        </button>
+        <button onclick="saveApiKey()" id="btnSaveApiKey" class="px-4 py-2 rounded-xl bg-brand-600 hover:bg-brand-500 text-xs font-semibold text-white transition flex items-center space-x-1.5 shadow-sm shadow-brand-500/25">
+          <i data-lucide="check" class="w-4 h-4"></i>
+          <span>Save & Verify Key</span>
+        </button>
+      </div>
+
+    </div>
+  </div>
+
+  <!-- ================================================================= -->
+  <!-- MODAL: CITATION PREVIEW DRAWER -->
+  <!-- ================================================================= -->
+  <div id="citationModal" class="fixed inset-0 z-50 hidden bg-black/60 backdrop-blur-sm flex items-center justify-center p-4">
+    <div class="glass-panel w-full max-w-lg rounded-2xl p-6 border border-slate-700 shadow-2xl relative">
+      <div class="flex items-center justify-between pb-3 border-b border-slate-800">
+        <h4 class="text-sm font-bold text-white flex items-center space-x-2">
+          <i data-lucide="bookmark-check" class="w-4 h-4 text-brand-400"></i>
+          <span id="citationModalPage">Lecture Source Excerpt</span>
+        </h4>
+        <button onclick="closeCitationModal()" class="text-slate-400 hover:text-white transition">
+          <i data-lucide="x" class="w-4 h-4"></i>
+        </button>
+      </div>
+      <div class="py-4">
+        <div class="bg-slate-950 p-4 rounded-xl border border-slate-800 text-xs text-slate-200 leading-relaxed font-mono whitespace-pre-wrap" id="citationModalText">
+        </div>
+      </div>
+      <div class="pt-3 border-t border-slate-800 flex justify-end">
+        <button onclick="closeCitationModal()" class="px-4 py-1.5 rounded-lg bg-slate-800 hover:bg-slate-700 text-xs font-medium text-slate-300">
+          Close Excerpt
+        </button>
+      </div>
+    </div>
+  </div>
+
+  <!-- TOAST NOTIFICATION CONTAINER -->
+  <div id="toastContainer" class="fixed bottom-5 right-5 z-50 space-y-2 pointer-events-none"></div>
+
+  <!-- APPLICATION SCRIPT -->
+  <script src="/static/app.js"></script>
+</body>
+</html>
