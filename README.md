@@ -5,7 +5,7 @@
 1. **Generates Structured Academic Notes** with executive summaries, hierarchical conceptual modules, LaTeX math equations, and key definition glossaries.
 2. **Identifies & Ranks Important Topics** with exam priority tags (High / Medium / Foundational), prerequisites, and interactive concept mindmaps.
 3. **Generates Practice Questions** including real-time scored Multiple Choice Quizzes (MCQs), interactive 3D flippable Flashcards, and conceptual short-answer questions with grading rubrics.
-4. **Enables Conversational Student Q&A** powered directly by Gemini, with conversation history and answers that are not restricted to an uploaded PDF.
+4. **Enables Conversational Student Q&A** with a choice of Gemini general chat or offline, local search over an uploaded PDF.
 
 ---
 
@@ -35,6 +35,7 @@
 - **Conceptual Short Answer Questions**: Deep problems with model answers and grading rubrics.
 
 ### 5. Conversational Gemini Q&A
+- **Offline PDF mode** searches a selected PDF locally and returns matching excerpts with page citations; it requires no API key or network access.
 - Sends questions and recent conversation history directly to Gemini.
 - Answers general questions without restricting the assistant to uploaded PDF excerpts.
 - Works independently of PDF upload; requires a configured Gemini API key.
@@ -42,7 +43,7 @@
 
 ### 6. Dual-Engine Architecture
 - **Gemini Engine**: Seamless integration with **Google Gemini 2.5 Flash** via `google-genai` SDK.
-- **Offline / Heuristic Fallback Engine**: Document analysis remains available without an API key; conversational Gemini Q&A requires a configured API key.
+- **Offline / Heuristic Fallback Engine**: Document analysis and PDF-grounded chat remain available without an API key.
 
 ---
 
@@ -72,7 +73,7 @@ python main.py
 Open your browser at:
 👉 **`http://localhost:8000`**
 
-Document analysis also works without a Gemini API key using its local fallback engine. Gemini chat requires an API key. Uploaded PDFs and generated document data are cleared when the server starts.
+Document analysis and Offline PDF chat work without a Gemini API key. Gemini chat requires an API key. In the chat tab, select **Offline PDF** to search the active document locally or **Gemini** for general AI answers. Uploaded PDFs and generated document data are cleared when the server starts.
 
 ---
 
